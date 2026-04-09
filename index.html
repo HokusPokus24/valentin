@@ -3,184 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <title>Zettelchen für dich...</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap" rel="stylesheet">
+    
     <style>
-        :root {
-            --primary: #ff4d6d;
-            --primary-hover: #ff758f;
-            --bg: #fff0f3;
-        }
-
+        /* Der Hintergrund (wie ein Tisch) */
         body {
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(-45deg, #ffc8dd, #ffafcc, #bde0fe, #a2d2ff);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-            overflow: hidden;
-        }
-
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 40px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-            max-width: 400px;
-            width: 90%;
-            z-index: 10;
-        }
-
-        h1 { color: #ff4d6d; font-size: 1.8rem; margin-bottom: 25px; }
-
-        .btn-container {
+            background-color: #8c7b6d; /* Holz-artiger/neutraler Tisch-Ton */
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
-            min-height: 200px; /* Platzhalter für wachsenden Button */
             justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Caveat', cursive; /* Handschrift-Font aktivieren */
         }
 
-        button {
-            padding: 15px 35px;
-            font-size: 18px;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        /* Der Notizzettel */
+        .zettel {
+            background-color: #faf8f5;
+            width: 85%;
+            max-width: 400px;
+            min-height: 450px;
+            position: relative;
+            box-shadow: 3px 5px 15px rgba(0,0,0,0.3);
+            
+            padding: 40px 20px 30px 40px;
+            
+            /* Kariertes Muster generieren */
+            background-image: 
+                linear-gradient(#b8d8d8 1px, transparent 1px),
+                linear-gradient(90deg, #b8d8d8 1px, transparent 1px);
+            background-size: 25px 25px; /* Größe der Kästchen */
+            background-position: 0 0;
+            
+            color: #0f4c81; /* Kugelschreiber-Blau */
         }
 
-        #yes-btn {
-            background-color: var(--primary);
-            color: white;
-            font-weight: bold;
-            z-index: 100;
-        }
-
-        #no-btn {
-            background-color: #6c757d;
-            color: white;
-            opacity: 0.8;
-        }
-
-        .hidden { display: none !important; }
-
-        img {
-    width: 250px; /* Etwas größer für den eckigen Look */
-    height: auto; /* Proportional lassen */
-    object-fit: cover;
-    border-radius: 8px; /* Nur ganz leichte Abrundung für moderne Kanten */
-    margin-bottom: 20px;
-    border: 5px solid white;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-        /* Hintergrund-Deko */
-        .heart {
+        /* Ein roter Randstrich auf dem Papier (wie bei Klausurbögen) */
+        .zettel::before {
+            content: '';
             position: absolute;
-            color: rgba(255, 77, 109, 0.2);
-            font-size: 20px;
-            user-select: none;
-            animation: float 6s linear infinite;
+            top: 0;
+            bottom: 0;
+            left: 35px;
+            width: 2px;
+            background-color: #ff7a7a;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-top: 10px;
+            margin-bottom: 30px;
+            line-height: 1.2;
+            z-index: 1;
+            position: relative;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-start; /* Linksbündig anordnen */
+            position: relative;
             z-index: 1;
         }
 
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        /* Button-Design im Kuli-Style */
+        button {
+            background: transparent;
+            border: 2px solid transparent;
+            color: #0f4c81; /* Kuli-Blau */
+            font-family: 'Caveat', cursive;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
         }
+
+        /* Die Fake-Ankreuzkästchen */
+        .box {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            border: 2px solid #0f4c81; /* Kuli-Rahmen */
+            margin-right: 15px;
+            border-radius: 3px;
+        }
+
+        #btn-ja {
+            font-size: 2.5rem;
+        }
+
+        #btn-nein {
+            font-size: 2.5rem;
+        }
+
+        /* Wenn sie Ja sagt */
+        #erfolg {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            margin-top: 50px;
+        }
+
+        #erfolg h1 {
+            font-size: 4rem;
+            color: #d90429; /* Roter Kuli fürs Herz */
+        }
+
     </style>
 </head>
 <body>
 
-    <div class="glass-card" id="main-card">
-        <img src="Hund.jpg" alt="Cute">
-        <h1 id="question-text">Neele willst du mein Valentin sein?</h1>
-        <div class="btn-container">
-            <button id="yes-btn" onclick="celebrate()">JA!</button>
-            <button id="no-btn" onclick="shrinkNo()">Nein</button>
+    <div class="zettel">
+        <div id="frage-container">
+            <h1>Willst du meine Freundin sein?</h1>
+            
+            <div class="buttons">
+                <button id="btn-ja">
+                    <span class="box" id="box-ja"></span> Ja
+                </button>
+                <button id="btn-nein">
+                    <span class="box" id="box-nein"></span> Nein
+                </button>
+            </div>
+        </div>
+
+        <div id="erfolg">
+            <h1>❤️ JA ❤️</h1>
+            <p style="font-size: 2rem;">(Kreuz ist gesetzt!)</p>
         </div>
     </div>
 
-    <div class="glass-card hidden" id="success-card">
-        <img src="Hund.jpg" alt="Happy">
-        <h1>Glück gehabt! 🥰</h1>
-        <p>Ich wusste, dass du die richtige Entscheidung triffst.</p>
-        <p><b>Termin ist im Kalender geblockt!</b></p>
-    </div>
-
     <script>
-        let yesScale = 1;
-        let noScale = 1;
+        let jaGroesse = 2.5;
+        let neinGroesse = 2.5;
+        let boxJaGroesse = 25;
+        let boxNeinGroesse = 25;
+        let klicksAufNein = 0;
 
-        // Hintergrund-Herzen generieren
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 3 + 3 + 's';
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 6000);
-        }
-        setInterval(createHeart, 500);
+        const neinTexte = [
+            "Nein",
+            "Sicher?",
+            "Verklickt?",
+            "Denk nochmal nach!",
+            "Falscher Kasten!",
+            "Jetzt wird's eng...",
+            "Nur noch Ja passt!"
+        ];
 
-        function shrinkNo() {
-            yesScale += 0.4;
-            document.getElementById('yes-btn').style.transform = `scale(${yesScale})`;
+        const btnJa = document.getElementById('btn-ja');
+        const btnNein = document.getElementById('btn-nein');
+        const boxJa = document.getElementById('box-ja');
+        const boxNein = document.getElementById('box-nein');
+        const frageContainer = document.getElementById('frage-container');
+        const erfolgContainer = document.getElementById('erfolg');
+
+        btnNein.addEventListener('click', () => {
+            klicksAufNein++;
             
-            noScale -= 0.15;
-            if (noScale < 0.3) noScale = 0.3;
-            document.getElementById('no-btn').style.transform = `scale(${noScale})`;
+            // Ja wird größer
+            jaGroesse += 0.8; 
+            boxJaGroesse += 8;
             
-            const texts = ["Bist du sicher Neo?", "Ich pack dich!", "Denk nochmal nach, Neele", "Lieber Arne?...", "Letzte Chance!"];
-            document.getElementById('no-btn').innerText = texts[Math.floor(Math.random() * texts.length)];
-        }
+            // Nein wird kleiner
+            neinGroesse -= 0.3; 
+            boxNeinGroesse -= 3;
 
-        function celebrate() {
-            document.getElementById('main-card').classList.add('hidden');
-            document.getElementById('success-card').classList.remove('hidden');
+            // Limit, damit Nein nicht unsichtbar wird
+            if (neinGroesse < 0.5) neinGroesse = 0.5; 
+            if (boxNeinGroesse < 5) boxNeinGroesse = 5;
 
-            const duration = 10 * 1000;
-            const animationEnd = Date.now() + duration;
-            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+            // Größen anwenden
+            btnJa.style.fontSize = jaGroesse + 'rem';
+            boxJa.style.width = boxJaGroesse + 'px';
+            boxJa.style.height = boxJaGroesse + 'px';
+            
+            btnNein.style.fontSize = neinGroesse + 'rem';
+            boxNein.style.width = boxNeinGroesse + 'px';
+            boxNein.style.height = boxNeinGroesse + 'px';
 
-            function randomInRange(min, max) {
-                return Math.random() * (max - min) + min;
+            // Text anpassen
+            if (klicksAufNein < neinTexte.length) {
+                // Das span (die Kästchen-Box) muss erhalten bleiben beim Text-Ändern
+                btnNein.innerHTML = `<span class="box" id="box-nein" style="width: ${boxNeinGroesse}px; height: ${boxNeinGroesse}px;"></span> ` + neinTexte[klicksAufNein];
+            } else {
+                btnNein.innerHTML = `<span class="box" id="box-nein" style="width: ${boxNeinGroesse}px; height: ${boxNeinGroesse}px;"></span> ...`;
             }
+        });
 
-            const interval = setInterval(function() {
-                const timeLeft = animationEnd - Date.now();
-                if (timeLeft <= 0) return clearInterval(interval);
-
-                const particleCount = 50 * (timeLeft / duration);
-                confetti(Object.assign({}, defaults, { 
-                    particleCount, 
-                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } 
-                }));
-                confetti(Object.assign({}, defaults, { 
-                    particleCount, 
-                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } 
-                }));
-            }, 250);
-        }
+        btnJa.addEventListener('click', () => {
+            // Zeigt ein X im "Ja"-Kasten, bevor der Text wechselt
+            boxJa.style.backgroundColor = "#0f4c81"; 
+            
+            setTimeout(() => {
+                frageContainer.style.display = 'none';
+                erfolgContainer.style.display = 'flex';
+            }, 300); // 0.3 Sekunden warten für den Effekt
+        });
     </script>
 </body>
-
 </html>
-
